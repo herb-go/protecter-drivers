@@ -26,6 +26,7 @@ var DefaultMin = 32
 
 type Config struct {
 	Source      statictoml.Source
+	Example     statictoml.Source
 	KeycharList string
 	KeyMin      int
 	KeyMax      int
@@ -35,6 +36,10 @@ func (c *Config) Create() (*Applications, error) {
 	locker.Lock()
 	locker.Unlock()
 	source, err := c.Source.Abs()
+	if err != nil {
+		return nil, err
+	}
+	err = source.VerifyWithExample(c.Example)
 	if err != nil {
 		return nil, err
 	}
